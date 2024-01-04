@@ -25,8 +25,16 @@ export const postRouter = createTRPCRouter({
     }),
 
   getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
+    return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
     });
   }),
+
+  delete: publicProcedure
+    .input(z.object({ id: z.number()}) )
+    .mutation(({ ctx, input }) => {
+    return ctx.db.post.delete({
+      where: { id: input.id }
+    })
+  })
 });
